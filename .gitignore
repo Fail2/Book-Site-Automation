@@ -1,2 +1,32 @@
+# Python bytecode (__pycache__)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Playwright artifacts
+test-results/
+playwright-report/
+blob-report/
+videos/
+screenshots/
+traces/
+
+# Pytest / Allure results
+.pytest_cache/
+allure-results/
+allure-report/
+htmlcov/
+.coverage
+
+# Virtual Environment
 venv/
+.venv/
+env/
+
+# IDE files
+.vscode/
+.idea/
+
+
 *.pdf
