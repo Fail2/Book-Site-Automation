@@ -16,7 +16,7 @@ def test_book_navigation(page: Page):
         book = books.nth(value)
 
         title_link = book.locator('h3 a')
-        title = title_link.get_attribute('title')
+        title = title_link.get_attribute('title').strip()
 
         book_url = title_link.get_attribute('href')
 
@@ -24,7 +24,7 @@ def test_book_navigation(page: Page):
         
         expect(page).to_have_url(f'https://books.toscrape.com/{book_url}')
         
-        detail_title = page.locator('h1').first.inner_text()
+        detail_title = page.locator('h1').first.inner_text().strip()
    
         assert title == detail_title,(
             f"Title mismatch! List: {title}, Detail: {detail_title}"
@@ -38,5 +38,5 @@ def test_book_navigation(page: Page):
         page.go_back()
 
         expect(page).to_have_url(url)
-        expect(books.first).to_be_visible()
+        expect(books.nth(value)).to_be_visible()
 
