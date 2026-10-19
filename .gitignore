@@ -11,6 +11,7 @@ blob-report/
 videos/
 screenshots/
 traces/
+node_modules/
 
 # Pytest / Allure results
 .pytest_cache/
@@ -30,3 +31,4 @@ env/
 
 
 *.pdf
+*.json
