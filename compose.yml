@@ -1,0 +1,13 @@
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: book-site-automation:latest
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    working_dir: /app
+    volumes:
+      - .:/app
+    shm_size: "1gb"
+    init: true
+    command: pytest
