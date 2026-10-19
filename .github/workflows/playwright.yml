@@ -1,9 +1,13 @@
+
 name: Playwright Tests and Reports
 
 on:
   push:
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -86,3 +90,44 @@ jobs:
       - name: Fail workflow if tests failed
         if: steps.tests.outcome == 'failure'
         run: exit 1
+
+  deploy:
+    name: Deploy Allure Report to GitHub Pages
+    needs: test
+    if: always() && github.event_name != 'pull_request' && needs.test.result != 'cancelled'
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Download test reports
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-test-reports
+          path: downloaded-reports
+
+      - name: Prepare GitHub Pages site
+        run: |
+          if [ -d downloaded-reports/allure-report ] && \
+             [ -f downloaded-reports/allure-report/index.html ]; then
+            mkdir -p site
+            cp -r downloaded-reports/allure-report/. site/
+          else
+            echo "Allure report was not generated."
+            exit 1
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
