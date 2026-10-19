@@ -48,20 +48,13 @@ jobs:
         run: |
           mkdir -p allure-results
           mkdir -p playwright-artifacts
+          mkdir -p reports
           rm -rf allure-report
 
       - name: Run tests and generate results
         id: tests
         continue-on-error: true
-        run: |
-          pytest \
-            --html=test-report.html \
-            --self-contained-html \
-            --alluredir=allure-results \
-            --screenshot=only-on-failure \
-            --video=retain-on-failure \
-            --tracing=retain-on-failure \
-            --output=playwright-artifacts
+        run: pytest 
 
       - name: Generate Allure report
         if: always()
@@ -80,7 +73,7 @@ jobs:
         with:
           name: playwright-test-reports
           path: |
-            test-report.html
+            reports/test-report.html
             allure-results/
             allure-report/
             playwright-artifacts/
