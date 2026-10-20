@@ -16,8 +16,10 @@ def test_book_navigation(page: Page):
         book = books.nth(value)
 
         title_link = book.locator('h3 a')
-        homepage_title = title_link.get_attribute('title').strip()
-        homepage_price = book.locator('.price_color').inner_text().strip()
+        homepage_title = title_link.get_attribute('title')
+        assert homepage_title and homepage_title.strip(), f'Homepage title is empty for book at index {value}'
+        homepage_price = book.locator('.price_color').inner_text()
+        assert homepage_price and homepage_price.strip(), f'Homepage price is empty for book at index {value}'
         
         assert homepage_price.startswith('£'), f'Price missing £ sign {homepage_price}'
         assert len(homepage_price) > 1, f'Invalid homepage_price {homepage_price}'
@@ -28,14 +30,16 @@ def test_book_navigation(page: Page):
         
         expect(page).to_have_url(f'https://books.toscrape.com/{book_url}')
         
-        details_title = page.locator('h1').first.inner_text().strip()
+        details_title = page.locator('h1').first.inner_text()
+        assert details_title and details_title.strip(), f'Details title is empty for book at index {value}'
 
    
         assert homepage_title == details_title,(
             f"Title mismatch! Homepage: {homepage_title}, Detail: {details_title}"
         )
 
-        details_price = page.locator('.product_main .price_color').inner_text().strip()
+        details_price = page.locator('.product_main .price_color').inner_text()
+        assert details_price and details_price.strip(), f'Details price is empty for book at index {value}'
         assert details_price.startswith('£'), f'Price missing £ sign {details_price}'
         assert len(details_price) > 1, f'Invalid details_price {details_price}'
 

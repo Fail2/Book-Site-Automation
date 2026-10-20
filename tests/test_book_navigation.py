@@ -16,16 +16,18 @@ def test_book_navigation(page: Page):
         book = books.nth(value)
 
         title_link = book.locator('h3 a')
-        title = title_link.get_attribute('title').strip()
+        title = title_link.get_attribute('title')
+        assert title and title.strip(), f'Title is empty for book at index {value}'
 
         book_url = title_link.get_attribute('href')
-
+        assert book_url and book_url.strip(), f'Book URL is empty for book at index {value}'
         title_link.click()
         
         expect(page).to_have_url(f'https://books.toscrape.com/{book_url}')
         
-        detail_title = page.locator('h1').first.inner_text().strip()
-   
+        detail_title = page.locator('h1').first.inner_text()
+        assert detail_title and detail_title.strip(), f'Detail title is empty for book at index {value}'
+        
         assert title == detail_title,(
             f"Title mismatch! List: {title}, Detail: {detail_title}"
         )

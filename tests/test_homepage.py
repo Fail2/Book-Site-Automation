@@ -14,8 +14,8 @@ def test_homepage(page:Page):
         header = headers.nth(i)
         if header.is_visible():
             expect(header).to_be_visible()
-            text = header.inner_text().strip()
-            assert text != '', f'Header {i} has empty text'
+            text = header.inner_text()
+            assert text and text.strip(), f'Header {i} has empty text'
     
     books = page.locator('article.product_pod')
     expect(books.first).to_be_visible()
